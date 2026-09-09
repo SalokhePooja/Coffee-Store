@@ -1,0 +1,31 @@
+<aside class="cart-panel">
+  <h2>Your cart</h2>
+
+  <div class="cart-items" *ngIf="cartItems().length; else emptyCart">
+    <div class="cart-item" *ngFor="let item of cartItems(); trackBy: trackCartItemId">
+      <div class="item-text">
+        <strong>{{ item.drink.name }}</strong>
+        <span>{{ formatToppingNames(item) }}</span>
+      </div>
+      <div class="quantity-controls">
+        <button type="button" (click)="updateQuantity(item, -1)">-</button>
+        <span>{{ item.quantity }}</span>
+        <button type="button" (click)="updateQuantity(item, 1)">+</button>
+      </div>
+      <button type="button" class="link-button" (click)="removeItem(item.id)">Remove</button>
+    </div>
+  </div>
+
+  <ng-template #emptyCart>
+    <p class="muted">Your cart is empty.</p>
+  </ng-template>
+
+  <div class="summary-box" *ngIf="cartItems().length">
+    <div class="summary-row"><span>Subtotal</span><strong>€{{ summary().subtotal.toFixed(2) }}</strong></div>
+    <div class="summary-row"><span>Promotion</span><strong>{{ summary().promotionName ?? 'None' }}</strong></div>
+    <div class="summary-row"><span>Discount</span><strong>-€{{ summary().discountAmount.toFixed(2) }}</strong></div>
+    <div class="summary-row total-row"><span>Total</span><strong>€{{ summary().total.toFixed(2) }}</strong></div>
+  </div>
+
+  <button type="button" class="primary-button" [disabled]="!cartItems().length" (click)="placeOrder()">Place order</button>
+</aside>

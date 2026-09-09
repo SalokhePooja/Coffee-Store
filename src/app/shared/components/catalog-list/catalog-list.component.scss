@@ -1,0 +1,107 @@
+:host {
+  display: block;
+}
+
+.catalog-section + .catalog-section {
+  margin-top: 1.5rem;
+}
+
+.drink-list,
+.entity-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.entity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.drink-card,
+.entity-list li {
+  border: 1px solid rgba(101, 80, 66, 0.12);
+  border-radius: 18px;
+  background: #fffdfb;
+  padding: 1rem;
+}
+
+.entity-list li,
+.drink-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.entity-list li > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.drink-header {
+  margin-bottom: 0.8rem;
+}
+
+.drink-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.price,
+.topping-price {
+  font-weight: 700;
+  color: #8b5e45;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.drink-header > button {
+  background: #714a35;
+  color: #fff;
+}
+
+.topping-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.label {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+  color: #5e4034;
+}
+
+.topping-option {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.35rem;
+  border-radius: 10px;
+}
+
+.topping-option input {
+  accent-color: #714a35;
+}
+
+.list-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.list-actions button {
+  background: #f4ece8;
+  color: #3d281f;
+}
+
+.list-actions .danger {
+  background: #fdeceb;
+  color: #9b2c2c;
+}

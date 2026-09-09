@@ -1,0 +1,240 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.page-header {
+  padding: 0.75rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+  margin: 0.2rem 0 0;
+  font-size: clamp(2rem, 3vw, 3rem);
+  color: #2d1b12;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.14rem;
+  text-transform: uppercase;
+  color: #8b5e45;
+}
+
+.content-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.menu-panel,
+.cart-panel,
+.panel {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(101, 80, 66, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 15px 30px rgba(80, 57, 46, 0.06);
+  padding: 1.25rem;
+}
+
+.drinks-scroll {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.cart-panel {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.drink-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.drink-card {
+  border: 1px solid rgba(101, 80, 66, 0.12);
+  border-radius: 18px;
+  background: #fffdfb;
+  padding: 1rem;
+}
+
+.drink-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.drink-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.price,
+.topping-price {
+  font-weight: 700;
+  color: #8b5e45;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.96;
+}
+
+.drink-header button,
+.primary-button {
+  background: #714a35;
+  color: #fff;
+}
+
+.topping-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.label {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+  color: #5e4034;
+}
+
+.topping-option {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.35rem;
+  border-radius: 10px;
+}
+
+.topping-option input {
+  accent-color: #714a35;
+}
+
+.cart-items {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.7rem;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid rgba(101, 80, 66, 0.12);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.item-text {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f7f0ea;
+  border-radius: 999px;
+  padding: 0.2rem 0.4rem;
+}
+
+.quantity-controls button {
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  color: #2d1b12;
+  padding: 0;
+}
+
+.link-button {
+  background: transparent;
+  color: #9b4b3f;
+  padding-inline: 0.5rem;
+}
+
+.summary-box {
+  margin-top: 1.25rem;
+  border-top: 1px solid rgba(101, 80, 66, 0.12);
+  padding-top: 1rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.total-row {
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(101, 80, 66, 0.12);
+  font-size: 1.1rem;
+}
+
+.primary-button {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.alert {
+  margin-top: 1rem;
+  border-radius: 12px;
+  padding: 0.8rem 0.9rem;
+  font-weight: 600;
+}
+
+.alert.success {
+  background: #eaf8ee;
+  color: #165c35;
+}
+
+.alert.error {
+  background: #fdeceb;
+  color: #9b2c2c;
+}
+
+.loading-state,
+.muted {
+  color: #6f5449;
+}
+
+@media (max-width: 920px) {
+  :host {
+    height: auto;
+    overflow: visible;
+  }
+
+  .content-grid {
+    flex: none;
+    grid-template-columns: 1fr;
+  }
+
+  .drinks-scroll {
+    height: auto;
+    overflow: visible;
+  }
+
+  .cart-panel {
+    overflow: visible;
+  }
+}

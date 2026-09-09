@@ -1,0 +1,37 @@
+<header class="topbar">
+  <div class="brand-block">
+    <img
+      class="brand-mark"
+      src="assets/coffee-logo.svg"
+      alt="Coffee logo"
+    />
+    <div>
+      <h1>{{ title }}</h1>
+    </div>
+  </div>
+
+  <nav class="main-nav">
+    <a
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+     
+    >
+      Customer
+    </a>
+    <a routerLink="/admin" routerLinkActive="active">Admin</a>
+  </nav>
+</header>
+
+<main class="page-shell">
+  <router-outlet />
+</main>
+
+@if (loading.isLoading()) {
+  <div class="global-loading" role="status" aria-live="polite">
+    <span class="loading-spinner" aria-hidden="true"></span>
+    <span>Loading...</span>
+  </div>
+}
+
+<app-snackbar />

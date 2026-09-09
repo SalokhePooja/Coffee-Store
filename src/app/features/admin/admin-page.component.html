@@ -1,0 +1,54 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Administration</p>
+    <h1>Manage drinks and toppings</h1>
+  </div>
+</section>
+
+<div class="loading-state" *ngIf="isLoading">Loading drinks and toppings...</div>
+
+<div class="admin-grid" >
+  <section class="panel">
+    <h2>Drinks</h2>
+    <app-catalog-form
+      entity="drink"
+      [item]="editingDrink"
+      [resetToken]="drinkFormResetToken"
+      (saved)="saveDrink($event)"
+      (cancelled)="cancel('drink')"
+    />
+    <div class="admin-list-scroll">
+      <app-catalog-list
+        class="admin-list-divider"
+        [drinks]="drinks"
+        [showActions]="true"
+        [showToppings]="false"
+        (editDrink)="editDrink($event)"
+        (deleteDrink)="deleteDrink($event)"
+      />
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Toppings</h2>
+    <app-catalog-form
+      entity="topping"
+      [item]="editingTopping"
+      [resetToken]="toppingFormResetToken"
+      (saved)="saveTopping($event)"
+      (cancelled)="cancel('topping')"
+    />
+    <div class="admin-list-scroll">
+      <app-catalog-list
+        class="admin-list-divider"
+        [toppings]="toppings"
+        [showActions]="true"
+        [showDrinks]="false"
+        (editDrink)="editDrink($event)"
+        (deleteDrink)="deleteDrink($event)"
+        (editTopping)="editTopping($event)"
+        (deleteTopping)="deleteTopping($event)"
+      />
+    </div>
+  </section>
+</div>

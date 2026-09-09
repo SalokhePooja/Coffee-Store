@@ -1,0 +1,49 @@
+.entity-form {
+  display: grid;
+  gap: 0.85rem;
+  margin-bottom: 1.2rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  color: #4b3127;
+  font-weight: 600;
+}
+
+input {
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(101, 80, 66, 0.18);
+  border-radius: 10px;
+  font: inherit;
+  background: #fffdfb;
+}
+
+.field-error {
+  color: #b73333;
+  font-size: 0.82rem;
+}
+
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-button {
+  background: #714a35;
+  color: #fff;
+}
+
+.secondary-button {
+  background: #f1e5dd;
+  color: #3d281f;
+}

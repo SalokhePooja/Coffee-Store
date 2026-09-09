@@ -1,0 +1,25 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Customer experience</p>
+    <h1>Build your coffee order</h1>
+  </div>
+</section>
+
+<div class="loading-state" *ngIf="isLoading">Loading drinks and toppings...</div>
+
+<div class="content-grid" *ngIf="!isLoading">
+  <div class="menu-panel drinks-scroll">
+    <app-catalog-list
+      [drinks]="drinks"
+      [toppings]="toppings"
+      [selectedToppings]="selectedToppings"
+      (addToCart)="addToCart($event)"
+      (toppingToggled)="toggleTopping($event)"
+    />
+  </div>
+
+  <app-cart
+    (success)="onCartSuccess($event)"
+    (error)="onCartError($event)"
+  />
+</div>
