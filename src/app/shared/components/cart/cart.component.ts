@@ -40,7 +40,7 @@ export class CartComponent {
       next: (order) => {
         this.cartStore.clear();
         this.orderSuccess.emit(
-          `Order ${order.id} placed successfully! Final amount: €${order.total.toFixed(2)}`,
+          `Your order has been placed successfully. Order: ${order.id}. Total: €${order.total.toFixed(2)}`,
         );
       },
       error: (requestError: { error?: { message?: string } }) => {

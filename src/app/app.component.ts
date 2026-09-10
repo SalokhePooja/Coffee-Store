@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { LoadingService } from './core/services/loading.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { SnackbarComponent } from './core/components/snackbar/snackbar.component';
+import { SnackbarComponent } from './shared/components/snackbar/snackbar.component';
 
 @Component({
   selector: 'app-root',

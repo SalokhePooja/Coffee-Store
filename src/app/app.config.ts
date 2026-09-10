@@ -3,7 +3,7 @@ import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { mockApiInterceptor } from './core/interceptors/mock-api.interceptor';
+import { mockApiInterceptor } from './core/interceptors/mock-api/mock-api.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 

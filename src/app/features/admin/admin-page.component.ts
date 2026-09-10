@@ -6,7 +6,10 @@ import { Drink, Topping } from '../../core/models';
 import { DrinkService } from '../../core/services/drink.service';
 import { ToppingService } from '../../core/services/topping.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { CatalogEntity, CatalogFormComponent } from '../../shared/components/catalog-form/catalog-form.component';
+import {
+  CatalogEntity,
+  CatalogFormComponent,
+} from '../../shared/components/catalog-form/catalog-form.component';
 import { CatalogListComponent } from '../../shared/components/catalog-list/catalog-list.component';
 
 interface CatalogFormValue {
@@ -31,11 +34,9 @@ export class AdminPageComponent implements OnInit {
   toppingFormResetToken = 0;
   isLoading = false;
 
-
-    private readonly drinksApi = inject(DrinkService);
-    private readonly toppingsApi = inject(ToppingService);
-    private readonly snackbar = inject(SnackbarService);
-
+  private readonly drinksApi = inject(DrinkService);
+  private readonly toppingsApi = inject(ToppingService);
+  private readonly snackbar = inject(SnackbarService);
 
   ngOnInit(): void {
     this.loadCollections();
@@ -45,7 +46,9 @@ export class AdminPageComponent implements OnInit {
     this.isLoading = true;
     forkJoin({
       drinks: this.drinksApi.getDrinks().pipe(retry({ count: 4, delay: 1000 })),
-      toppings: this.toppingsApi.getToppings().pipe(retry({ count: 4, delay: 1000 })),
+      toppings: this.toppingsApi
+        .getToppings()
+        .pipe(retry({ count: 4, delay: 1000 })),
     }).subscribe({
       next: ({ drinks, toppings }) => {
         this.drinks = this.sortByName(drinks);
@@ -54,7 +57,10 @@ export class AdminPageComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
-        this.snackbar.show('Unable to load drinks and toppings right now.', 'error');
+        this.snackbar.show(
+          'Unable to load drinks and toppings right now.',
+          'error',
+        );
       },
     });
   }
@@ -64,19 +70,34 @@ export class AdminPageComponent implements OnInit {
       this.snackbar.show('A drink with this name already exists.', 'error');
       return;
     }
-    const request = value.id === null
-      ? this.drinksApi.createDrink({ name: value.name, price: value.price })
-      : this.drinksApi.updateDrink(value.id, { name: value.name, price: value.price });
+    const request =
+      value.id === null
+        ? this.drinksApi.createDrink({ name: value.name, price: value.price })
+        : this.drinksApi.updateDrink(value.id, {
+            name: value.name,
+            price: value.price,
+          });
     request.subscribe({
       next: (result) => {
-        this.drinks = value.id === null
-          ? this.sortByName([...this.drinks, result])
-          : this.sortByName(this.drinks.map((drink) => drink.id === result.id ? result : drink));
+        this.drinks =
+          value.id === null
+            ? this.sortByName([...this.drinks, result])
+            : this.sortByName(
+                this.drinks.map((drink) =>
+                  drink.id === result.id ? result : drink,
+                ),
+              );
         this.editingDrink = null;
         this.drinkFormResetToken++;
-        this.snackbar.show(value.id === null ? 'Drink created.' : 'Drink updated.');
+        this.snackbar.show(
+          value.id === null ? 'Drink created.' : 'Drink updated.',
+        );
       },
-      error: (error: { error?: { message?: string } }) => this.snackbar.show(error?.error?.message ?? 'Unable to save the drink.', 'error'),
+      error: (error: { error?: { message?: string } }) =>
+        this.snackbar.show(
+          error?.error?.message ?? 'Unable to save the drink.',
+          'error',
+        ),
     });
   }
 
@@ -85,19 +106,37 @@ export class AdminPageComponent implements OnInit {
       this.snackbar.show('A topping with this name already exists.', 'error');
       return;
     }
-    const request = value.id === null
-      ? this.toppingsApi.createTopping({ name: value.name, price: value.price })
-      : this.toppingsApi.updateTopping(value.id, { name: value.name, price: value.price });
+    const request =
+      value.id === null
+        ? this.toppingsApi.createTopping({
+            name: value.name,
+            price: value.price,
+          })
+        : this.toppingsApi.updateTopping(value.id, {
+            name: value.name,
+            price: value.price,
+          });
     request.subscribe({
       next: (result) => {
-        this.toppings = value.id === null
-          ? this.sortByName([...this.toppings, result])
-          : this.sortByName(this.toppings.map((topping) => topping.id === result.id ? result : topping));
+        this.toppings =
+          value.id === null
+            ? this.sortByName([...this.toppings, result])
+            : this.sortByName(
+                this.toppings.map((topping) =>
+                  topping.id === result.id ? result : topping,
+                ),
+              );
         this.editingTopping = null;
         this.toppingFormResetToken++;
-        this.snackbar.show(value.id === null ? 'Topping created.' : 'Topping updated.');
+        this.snackbar.show(
+          value.id === null ? 'Topping created.' : 'Topping updated.',
+        );
       },
-      error: (error: { error?: { message?: string } }) => this.snackbar.show(error?.error?.message ?? 'Unable to save the topping.', 'error'),
+      error: (error: { error?: { message?: string } }) =>
+        this.snackbar.show(
+          error?.error?.message ?? 'Unable to save the topping.',
+          'error',
+        ),
     });
   }
 
@@ -136,12 +175,20 @@ export class AdminPageComponent implements OnInit {
     else this.editingTopping = null;
   }
 
-  private isDuplicate(items: (Drink | Topping)[], name: string, id: number | null): boolean {
-    return items.some((item) => item.id !== id && this.hasSameName(item.name, name));
+  private isDuplicate(
+    items: (Drink | Topping)[],
+    name: string,
+    id: number | null,
+  ): boolean {
+    return items.some(
+      (item) => item.id !== id && this.hasSameName(item.name, name),
+    );
   }
 
   private hasSameName(first: string, second: string): boolean {
-    return first.trim().toLocaleLowerCase() === second.trim().toLocaleLowerCase();
+    return (
+      first.trim().toLocaleLowerCase() === second.trim().toLocaleLowerCase()
+    );
   }
 
   private sortByName<T extends Drink | Topping>(items: T[]): T[] {
