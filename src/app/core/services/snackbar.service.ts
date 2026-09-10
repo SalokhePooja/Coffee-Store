@@ -8,6 +8,9 @@ export class SnackbarService {
   show(message: string, type: 'success' | 'error' = 'success'): void {
     this.type.set(type);
     this.message.set(message);
+    setTimeout(() => {
+      this.message.set('');
+    }, 5000);
   }
 
   clear(): void {
