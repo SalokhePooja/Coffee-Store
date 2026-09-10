@@ -7,13 +7,20 @@ import {
 } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 
-import { CartItem, CartResponse, CartSummary, Drink, Order, Topping } from '../models';
+import {
+  CartItem,
+  CartResponse,
+  CartSummary,
+  Drink,
+  Order,
+  Topping,
+} from '../models';
 import { calculateCartSummary } from '../utils/promotion.util';
 
 interface MockDatabase {
   drinks: Drink[];
   toppings: Topping[];
-  carts: Array<{ id: string; items: CartItem[] }>;
+  carts: { id: string; items: CartItem[] }[];
   orders: Order[];
 }
 
@@ -57,7 +64,9 @@ function response<T>(status: number, body: T): Observable<HttpResponse<T>> {
 }
 
 function error(status: number, message: string): Observable<never> {
-  return throwError(() => new HttpErrorResponse({ status, error: { message } }));
+  return throwError(
+    () => new HttpErrorResponse({ status, error: { message } }),
+  );
 }
 
 function buildSummary(items: CartItem[]): CartSummary {
@@ -73,10 +82,16 @@ function cartResponse(cart: { id: string; items: CartItem[] }): CartResponse {
 }
 
 function toppingSignature(toppings: Topping[]): string {
-  return toppings.map((topping) => topping.id).sort((first, second) => first - second).join(',');
+  return toppings
+    .map((topping) => topping.id)
+    .sort((first, second) => first - second)
+    .join(',');
 }
 
-export const mockApiInterceptor: HttpInterceptorFn = (request: HttpRequest<unknown>, next: HttpHandlerFn) => {
+export const mockApiInterceptor: HttpInterceptorFn = (
+  request: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+) => {
   if (!request.url.startsWith('/api')) {
     return next(request);
   }
@@ -94,10 +109,18 @@ export const mockApiInterceptor: HttpInterceptorFn = (request: HttpRequest<unkno
   const drinkId = Number(url.split('/api/drinks/')[1]);
   if (request.method === 'POST' && url === '/api/drinks') {
     const body = request.body as Partial<Drink>;
-    if (database.drinks.some((drink) => drink.name.toLowerCase() === body.name?.trim().toLowerCase())) {
+    if (
+      database.drinks.some(
+        (drink) => drink.name.toLowerCase() === body.name?.trim().toLowerCase(),
+      )
+    ) {
       return error(409, 'A drink with this name already exists');
     }
-    const created = { id: Math.max(0, ...database.drinks.map((drink) => drink.id)) + 1, name: body.name ?? '', price: Number(body.price) };
+    const created = {
+      id: Math.max(0, ...database.drinks.map((drink) => drink.id)) + 1,
+      name: body.name ?? '',
+      price: Number(body.price),
+    };
     database.drinks.push(created);
     writeDatabase(database);
     return response(201, created);
@@ -113,7 +136,10 @@ export const mockApiInterceptor: HttpInterceptorFn = (request: HttpRequest<unkno
   }
   if (request.method === 'DELETE' && url.startsWith('/api/drinks/')) {
     database.drinks = database.drinks.filter((drink) => drink.id !== drinkId);
-    database.carts.forEach((cart) => cart.items = cart.items.filter((item) => item.drinkId !== drinkId));
+    database.carts.forEach(
+      (cart) =>
+        (cart.items = cart.items.filter((item) => item.drinkId !== drinkId)),
+    );
     writeDatabase(database);
     return response(200, { success: true });
   }
@@ -121,10 +147,19 @@ export const mockApiInterceptor: HttpInterceptorFn = (request: HttpRequest<unkno
   const toppingId = Number(url.split('/api/toppings/')[1]);
   if (request.method === 'POST' && url === '/api/toppings') {
     const body = request.body as Partial<Topping>;
-    if (database.toppings.some((topping) => topping.name.toLowerCase() === body.name?.trim().toLowerCase())) {
+    if (
+      database.toppings.some(
+        (topping) =>
+          topping.name.toLowerCase() === body.name?.trim().toLowerCase(),
+      )
+    ) {
       return error(409, 'A topping with this name already exists');
     }
-    const created = { id: Math.max(0, ...database.toppings.map((topping) => topping.id)) + 1, name: body.name ?? '', price: Number(body.price) };
+    const created = {
+      id: Math.max(0, ...database.toppings.map((topping) => topping.id)) + 1,
+      name: body.name ?? '',
+      price: Number(body.price),
+    };
     database.toppings.push(created);
     writeDatabase(database);
     return response(201, created);
@@ -139,10 +174,16 @@ export const mockApiInterceptor: HttpInterceptorFn = (request: HttpRequest<unkno
     return response(200, topping);
   }
   if (request.method === 'DELETE' && url.startsWith('/api/toppings/')) {
-    database.toppings = database.toppings.filter((topping) => topping.id !== toppingId);
-    database.carts.forEach((cart) => cart.items.forEach((item) => {
-      item.toppings = item.toppings.filter((topping) => topping.id !== toppingId);
-    }));
+    database.toppings = database.toppings.filter(
+      (topping) => topping.id !== toppingId,
+    );
+    database.carts.forEach((cart) =>
+      cart.items.forEach((item) => {
+        item.toppings = item.toppings.filter(
+          (topping) => topping.id !== toppingId,
+        );
+      }),
+    );
     writeDatabase(database);
     return response(200, { success: true });
   }
@@ -152,23 +193,41 @@ export const mockApiInterceptor: HttpInterceptorFn = (request: HttpRequest<unkno
     return response(200, cartResponse(findCart(database, cartMatch[1])));
   }
 
-  const cartItemMatch = url.match(/^\/api\/cart\/([^/]+)\/items(?:\/([^/]+))?$/);
+  const cartItemMatch = url.match(
+    /^\/api\/cart\/([^/]+)\/items(?:\/([^/]+))?$/,
+  );
   if (cartItemMatch) {
     const cart = findCart(database, cartItemMatch[1]);
     const itemId = cartItemMatch[2];
 
     if (request.method === 'POST' && !itemId) {
-      const body = request.body as { drinkId: number; toppings: number[]; quantity?: number };
-      const drink = database.drinks.find((item) => item.id === Number(body.drinkId));
+      const body = request.body as {
+        drinkId: number;
+        toppings: number[];
+        quantity?: number;
+      };
+      const drink = database.drinks.find(
+        (item) => item.id === Number(body.drinkId),
+      );
       if (!drink) return error(404, 'Drink not found');
       const toppings = (body.toppings ?? [])
         .map((id) => database.toppings.find((topping) => topping.id === id))
         .filter((topping): topping is Topping => Boolean(topping));
-      const existing = cart.items.find((item) => item.drinkId === drink.id && toppingSignature(item.toppings) === toppingSignature(toppings));
+      const existing = cart.items.find(
+        (item) =>
+          item.drinkId === drink.id &&
+          toppingSignature(item.toppings) === toppingSignature(toppings),
+      );
       if (existing) {
         existing.quantity += Number(body.quantity ?? 1);
       } else {
-        cart.items.push({ id: crypto.randomUUID(), drinkId: drink.id, drink, toppings, quantity: Number(body.quantity ?? 1) });
+        cart.items.push({
+          id: crypto.randomUUID(),
+          drinkId: drink.id,
+          drink,
+          toppings,
+          quantity: Number(body.quantity ?? 1),
+        });
       }
       writeDatabase(database);
       return response(200, cartResponse(cart));
@@ -181,7 +240,8 @@ export const mockApiInterceptor: HttpInterceptorFn = (request: HttpRequest<unkno
         cart.items = cart.items.filter((entry) => entry.id !== itemId);
       } else {
         item.quantity = Number((request.body as { quantity: number }).quantity);
-        if (item.quantity <= 0) cart.items = cart.items.filter((entry) => entry.id !== itemId);
+        if (item.quantity <= 0)
+          cart.items = cart.items.filter((entry) => entry.id !== itemId);
       }
       writeDatabase(database);
       return response(200, cartResponse(cart));
@@ -191,9 +251,15 @@ export const mockApiInterceptor: HttpInterceptorFn = (request: HttpRequest<unkno
   if (request.method === 'POST' && url === '/api/orders') {
     const cartId = (request.body as { cartId?: string })?.cartId ?? 'cart-1';
     const cart = findCart(database, cartId);
-    if (!cart.items.length) return error(400, 'Cannot place an empty cart order');
+    if (!cart.items.length)
+      return error(400, 'Cannot place an empty cart order');
     const summary = buildSummary(cart.items);
-    const order: Order = { id: `order-${Date.now()}`, ...summary, createdAt: new Date().toISOString(), items: cart.items };
+    const order: Order = {
+      id: `order-${Date.now()}`,
+      ...summary,
+      createdAt: new Date().toISOString(),
+      items: cart.items,
+    };
     database.orders.push(order);
     cart.items = [];
     writeDatabase(database);

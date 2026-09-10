@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { forkJoin, retry } from 'rxjs';
 
 import { Drink, Topping } from '../../core/models';
 import { DrinkService } from '../../core/services/drink.service';
 import { ToppingService } from '../../core/services/topping.service';
-import { SnackbarService } from '../../shared/ui/snackbar.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 import { CatalogEntity, CatalogFormComponent } from '../../shared/components/catalog-form/catalog-form.component';
 import { CatalogListComponent } from '../../shared/components/catalog-list/catalog-list.component';
 
@@ -31,11 +31,11 @@ export class AdminPageComponent implements OnInit {
   toppingFormResetToken = 0;
   isLoading = false;
 
-  constructor(
-    private readonly drinksApi: DrinkService,
-    private readonly toppingsApi: ToppingService,
-    private readonly snackbar: SnackbarService,
-  ) {}
+
+    private readonly drinksApi = inject(DrinkService);
+    private readonly toppingsApi = inject(ToppingService);
+    private readonly snackbar = inject(SnackbarService);
+
 
   ngOnInit(): void {
     this.loadCollections();
@@ -136,7 +136,7 @@ export class AdminPageComponent implements OnInit {
     else this.editingTopping = null;
   }
 
-  private isDuplicate(items: Array<Drink | Topping>, name: string, id: number | null): boolean {
+  private isDuplicate(items: (Drink | Topping)[], name: string, id: number | null): boolean {
     return items.some((item) => item.id !== id && this.hasSameName(item.name, name));
   }
 

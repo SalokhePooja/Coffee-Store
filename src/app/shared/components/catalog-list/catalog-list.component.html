@@ -1,22 +1,30 @@
-<section class="catalog-section" *ngIf="showDrinks">
-  <h2>Drinks</h2>
-  <div class="drink-list">
-    <article class="drink-card" *ngFor="let drink of drinks; trackBy: trackDrinkId">
+@if (showDrinks) {
+  <section class="catalog-section">
+    <h2>Drinks</h2>
+    <div class="drink-list">
+      @for (drink of drinks; track trackDrinkId($index, drink)) {
+        <article class="drink-card">
       <div class="drink-header">
         <div>
           <h3>{{ drink.name }}</h3>
           <span class="price">€{{ drink.price.toFixed(2) }}</span>
         </div>
-        <button *ngIf="!showActions" type="button" (click)="addToCart.emit(drink)">Add to cart</button>
-        <div class="list-actions" *ngIf="showActions">
+        @if (!showActions) {
+          <button type="button" (click)="addToCart.emit(drink)">Add to cart</button>
+        }
+        @if (showActions) {
+          <div class="list-actions">
           <button type="button" (click)="editDrink.emit(drink)">Edit</button>
           <button type="button" class="danger" (click)="deleteDrink.emit(drink.id)">Delete</button>
-        </div>
+          </div>
+        }
       </div>
 
-      <div class="topping-group" *ngIf="!showActions">
-        <p class="label">Choose toppings</p>
-        <label class="topping-option" *ngFor="let topping of toppings; trackBy: trackToppingId">
+      @if (!showActions) {
+        <div class="topping-group">
+          <p class="label">Choose toppings</p>
+          @for (topping of toppings; track trackToppingId($index, topping)) {
+            <label class="topping-option">
           <input
             type="checkbox"
             [checked]="isSelected(drink.id, topping.id)"
@@ -24,24 +32,32 @@
           />
           <span>{{ topping.name }}</span>
           <span class="topping-price">€{{ topping.price.toFixed(2) }}</span>
-        </label>
-      </div>
+            </label>
+          }
+        </div>
+      }
     </article>
-  </div>
-</section>
+      }
+    </div>
+  </section>
+}
 
-<section class="catalog-section" *ngIf="showActions && showToppings">
-  <h2>Toppings</h2>
-  <ul class="entity-list">
-    <li *ngFor="let topping of toppings; trackBy: trackToppingId">
-      <div>
-        <strong>{{ topping.name }}</strong>
-        <span>€{{ topping.price.toFixed(2) }}</span>
-      </div>
-      <div class="list-actions">
-        <button type="button" (click)="editTopping.emit(topping)">Edit</button>
-        <button type="button" class="danger" (click)="deleteTopping.emit(topping.id)">Delete</button>
-      </div>
-    </li>
-  </ul>
-</section>
+@if (showActions && showToppings) {
+  <section class="catalog-section">
+    <h2>Toppings</h2>
+    <ul class="entity-list">
+      @for (topping of toppings; track trackToppingId($index, topping)) {
+        <li>
+          <div>
+            <strong>{{ topping.name }}</strong>
+            <span>€{{ topping.price.toFixed(2) }}</span>
+          </div>
+          <div class="list-actions">
+            <button type="button" (click)="editTopping.emit(topping)">Edit</button>
+            <button type="button" class="danger" (click)="deleteTopping.emit(topping.id)">Delete</button>
+          </div>
+        </li>
+      }
+    </ul>
+  </section>
+}

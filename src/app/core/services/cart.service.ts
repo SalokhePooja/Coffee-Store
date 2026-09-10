@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { CartResponse } from '../models';
@@ -9,8 +9,7 @@ import { API_ENDPOINTS } from '../constants/api.constants';
 export class CartService {
   private readonly cartId = 'cart-1';
   private readonly baseUrl = API_ENDPOINTS.cart;
-
-  constructor(private readonly http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getCart(): Observable<CartResponse> {
     return this.http.get<CartResponse>(`${this.baseUrl}/${this.cartId}`);

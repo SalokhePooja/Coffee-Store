@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { Drink, Topping } from '../../../core/models';
@@ -16,6 +16,8 @@ export type CatalogEntity = 'drink' | 'topping';
   styleUrl: './catalog-form.component.scss',
 })
 export class CatalogFormComponent {
+  private readonly formBuilder = inject(FormBuilder);
+
   @Input() entity: CatalogEntity = 'drink';
   private resetVersion = 0;
   @Input() set resetToken(value: number) {
@@ -27,9 +29,15 @@ export class CatalogFormComponent {
   }
   @Input() set item(value: Drink | Topping | null) {
     this.editingId = value?.id ?? null;
-    this.form.reset(value ? { name: value.name, price: value.price } : { name: '', price: 0 });
+    this.form.reset(
+      value ? { name: value.name, price: value.price } : { name: '', price: 0 },
+    );
   }
-  @Output() readonly saved = new EventEmitter<{ id: number | null; name: string; price: number }>();
+  @Output() readonly saved = new EventEmitter<{
+    id: number | null;
+    name: string;
+    price: number;
+  }>();
   @Output() readonly cancelled = new EventEmitter<void>();
 
   readonly form = this.formBuilder.group({
@@ -37,8 +45,6 @@ export class CatalogFormComponent {
     price: [0, [priceValidator()]],
   });
   editingId: number | null = null;
-
-  constructor(private readonly formBuilder: FormBuilder) {}
 
   get title(): string {
     return this.editingId === null

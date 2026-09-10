@@ -206,6 +206,15 @@ The production build is written to `dist/coffee-store`.
 
 ---
 
+## Running Linting
+
+Run ESLint:
+
+```bash
+npm run lint
+```
+---
+
 ## Running Tests
 
 Run the unit tests in ChromeHeadless:
@@ -236,6 +245,7 @@ Coverage includes:
 The suite focuses on critical service, state, validation, and shared-component behavior. A percentage coverage report and end-to-end test suite are not currently configured.
 
 ---
+
 ## Main Screens
 
 Customer Area

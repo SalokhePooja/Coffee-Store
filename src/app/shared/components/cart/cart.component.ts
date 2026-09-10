@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 
 import { CartItem } from '../../../core/models';
 import { OrderService } from '../../../core/services/order.service';
@@ -13,16 +13,14 @@ import { CartStore } from '../../../state/cart.store';
   styleUrl: './cart.component.scss',
 })
 export class CartComponent {
+  private readonly orderService = inject(OrderService);
+  private readonly cartStore = inject(CartStore);
+
+  @Output() readonly orderSuccess = new EventEmitter<string>();
+  @Output() readonly orderError = new EventEmitter<string>();
+
   readonly cartItems = this.cartStore.cartItems;
   readonly summary = this.cartStore.cartSummary;
-
-  @Output() readonly success = new EventEmitter<string>();
-  @Output() readonly error = new EventEmitter<string>();
-
-  constructor(
-    private readonly orderService: OrderService,
-    private readonly cartStore: CartStore,
-  ) {}
 
   updateQuantity(item: CartItem, delta: number): void {
     const nextQuantity = item.quantity + delta;
@@ -41,10 +39,14 @@ export class CartComponent {
     this.orderService.placeOrder('cart-1').subscribe({
       next: (order) => {
         this.cartStore.clear();
-        this.success.emit(`Order ${order.id} placed successfully! Final amount: €${order.total.toFixed(2)}`);
+        this.orderSuccess.emit(
+          `Order ${order.id} placed successfully! Final amount: €${order.total.toFixed(2)}`,
+        );
       },
       error: (requestError: { error?: { message?: string } }) => {
-        this.error.emit(requestError?.error?.message ?? 'Unable to place the order.');
+        this.orderError.emit(
+          requestError?.error?.message ?? 'Unable to place the order.',
+        );
       },
     });
   }

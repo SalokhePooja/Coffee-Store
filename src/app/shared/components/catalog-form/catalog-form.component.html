@@ -3,32 +3,34 @@
     <span>Name</span>
     <input formControlName="name" type="text" [placeholder]="entity === 'drink' ? 'Espresso' : 'Vanilla'" />
   </label>
-  <div class="field-error" *ngIf="form.controls.name.touched && form.controls.name.hasError('required')">
-    Name is required.
-  </div>
-  <div class="field-error" *ngIf="form.controls.name.touched && form.controls.name.hasError('minlength')">
-    Name must contain at least 2 characters.
-  </div>
-  <div class="field-error" *ngIf="form.controls.name.touched && form.controls.name.hasError('maxlength')">
-    Name must contain at most 50 characters.
-  </div>
+  @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+    <div class="field-error">Name is required.</div>
+  }
+  @if (form.controls.name.touched && form.controls.name.hasError('minlength')) {
+    <div class="field-error">Name must contain at least 2 characters.</div>
+  }
+  @if (form.controls.name.touched && form.controls.name.hasError('maxlength')) {
+    <div class="field-error">Name must contain at most 50 characters.</div>
+  }
 
   <label>
     <span>Price (€)</span>
     <input formControlName="price" type="number" min="0.01" step="0.01" />
   </label>
-  <div class="field-error" *ngIf="form.controls.price.touched && form.controls.price.hasError('required')">
-    Price is required.
-  </div>
-  <div class="field-error" *ngIf="form.controls.price.touched && form.controls.price.hasError('min')">
-    Price must be above 0.
-  </div>
-  <div class="field-error" *ngIf="form.controls.price.touched && form.controls.price.hasError('decimal')">
-    Price must have at most 2 decimal places.
-  </div>
+  @if (form.controls.price.touched && form.controls.price.hasError('required')) {
+    <div class="field-error">Price is required.</div>
+  }
+  @if (form.controls.price.touched && form.controls.price.hasError('min')) {
+    <div class="field-error">Price must be above 0.</div>
+  }
+  @if (form.controls.price.touched && form.controls.price.hasError('decimal')) {
+    <div class="field-error">Price must have at most 2 decimal places.</div>
+  }
 
   <div class="button-row">
     <button type="submit" class="primary-button">{{ title }}</button>
-    <button type="button" class="secondary-button" *ngIf="editingId !== null" (click)="cancel()">Cancel</button>
+    @if (editingId !== null) {
+      <button type="button" class="secondary-button" (click)="cancel()">Cancel</button>
+    }
   </div>
 </form>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { forkJoin, retry } from 'rxjs';
 
 import { Drink, Topping } from '../../core/models';
@@ -8,7 +8,7 @@ import { CatalogListComponent } from '../../shared/components/catalog-list/catal
 import { CartStore } from '../../state/cart.store';
 import { DrinkService } from '../../core/services/drink.service';
 import { ToppingService } from '../../core/services/topping.service';
-import { SnackbarService } from '../../shared/ui/snackbar.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 @Component({
   selector: 'app-customer-page',
@@ -23,12 +23,10 @@ export class CustomerPageComponent implements OnInit {
   selectedToppings: Record<number, number[]> = {};
   isLoading = false;
 
-  constructor(
-    private readonly drinksApi: DrinkService,
-    private readonly toppingsApi: ToppingService,
-    private readonly cartStore: CartStore,
-    private readonly snackbar: SnackbarService,
-  ) {}
+  private readonly drinksApi = inject(DrinkService);
+  private readonly toppingsApi = inject(ToppingService);
+  private readonly cartStore = inject(CartStore);
+  private readonly snackbar = inject(SnackbarService);
 
   ngOnInit(): void {
     this.loadData();
@@ -39,7 +37,9 @@ export class CustomerPageComponent implements OnInit {
     this.isLoading = true;
     forkJoin({
       drinks: this.drinksApi.getDrinks().pipe(retry({ count: 2, delay: 500 })),
-      toppings: this.toppingsApi.getToppings().pipe(retry({ count: 2, delay: 500 })),
+      toppings: this.toppingsApi
+        .getToppings()
+        .pipe(retry({ count: 2, delay: 500 })),
     }).subscribe({
       next: ({ drinks, toppings }) => {
         this.drinks = this.sortByName(drinks);
@@ -48,7 +48,10 @@ export class CustomerPageComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
-        this.snackbar.show('Unable to load drinks and toppings right now.', 'error');
+        this.snackbar.show(
+          'Unable to load drinks and toppings right now.',
+          'error',
+        );
       },
     });
   }
@@ -66,7 +69,9 @@ export class CustomerPageComponent implements OnInit {
 
   addToCart(drink: Drink): void {
     const selectedIds = this.selectedToppings[drink.id] ?? [];
-    const toppings = this.toppings.filter((topping) => selectedIds.includes(topping.id));
+    const toppings = this.toppings.filter((topping) =>
+      selectedIds.includes(topping.id),
+    );
     this.cartStore.addItem(drink, toppings);
     this.selectedToppings[drink.id] = [];
   }

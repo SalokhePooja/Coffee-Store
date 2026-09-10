@@ -5,9 +5,11 @@
   </div>
 </section>
 
-<div class="loading-state" *ngIf="isLoading">Loading drinks and toppings...</div>
-
-<div class="admin-grid" >
+@if (isLoading) {
+  <div class="loading-state">Loading drinks and toppings...</div>
+}
+@else {
+<div class="admin-grid">
   <section class="panel">
     <h2>Drinks</h2>
     <app-catalog-form
@@ -52,3 +54,4 @@
     </div>
   </section>
 </div>
+}

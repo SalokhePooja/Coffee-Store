@@ -1,7 +1,11 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { ToppingService } from './topping.service';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('ToppingService', () => {
   let service: ToppingService;
@@ -9,8 +13,11 @@ describe('ToppingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [ToppingService],
+      providers: [
+        ToppingService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     });
     service = TestBed.inject(ToppingService);
     http = TestBed.inject(HttpTestingController);
@@ -30,9 +37,11 @@ describe('ToppingService', () => {
   });
 
   it('updates a topping using its id and payload', () => {
-    service.updateTopping(4, { name: 'Fresh lemon', price: 2.5 }).subscribe((topping) => {
-      expect(topping.price).toBe(2.5);
-    });
+    service
+      .updateTopping(4, { name: 'Fresh lemon', price: 2.5 })
+      .subscribe((topping) => {
+        expect(topping.price).toBe(2.5);
+      });
 
     const request = http.expectOne('/api/toppings/4');
     expect(request.request.method).toBe('PUT');
