@@ -336,8 +336,6 @@ AI tools were used to accelerate implementation and review:
 - Unit-test examples
 - Documentation drafting
 
-All generated code was reviewed, adapted to the project conventions, and validated with the Angular build and test commands.
-
 ---
 
 ## Development Environment
