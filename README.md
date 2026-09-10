@@ -111,6 +111,7 @@ HTTP communication is encapsulated in dedicated services:
 - `OrderService`
 
 The `mockApiInterceptor` provides REST-style mock endpoints and stores data under the `coffee-store-mock-db-v1` localStorage key.
+The browser-local mock API is split into focused modules. mock-api.interceptor.ts routes requests, while separate handlers manage drinks, toppings, cart operations, and orders. Storage, response creation, validation, and shared mock types are kept in dedicated modules.
 
 ### Routing
 
