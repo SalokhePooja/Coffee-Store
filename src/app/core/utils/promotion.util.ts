@@ -1,7 +1,14 @@
 import { CartItem, CartSummary } from '../models';
 
+/**
+ * Calculates the cart subtotal, best promotion, discount, and total.
+ * @param items 
+ * @returns 
+ */
 export function calculateCartSummary(items: CartItem[]): CartSummary {
+  // Count every drink represented by the cart items.
   const drinkCount = items.reduce((count, item) => count + item.quantity, 0);
+  // Sum drink and topping prices for the cart subtotal.
   const subtotal = round(
     items.reduce((sum, item) => {
       const toppingsTotal = item.toppings.reduce(
@@ -16,6 +23,7 @@ export function calculateCartSummary(items: CartItem[]): CartSummary {
   const cheapestDrinkDiscount =
     drinkCount >= 3
       ? Math.min(
+          // Find the price of each drink including its toppings.
           ...items.map(
             (item) =>
               item.drink.price +
@@ -29,6 +37,7 @@ export function calculateCartSummary(items: CartItem[]): CartSummary {
     { name: 'Cheapest drink free', value: cheapestDrinkDiscount },
   ];
 
+  // Keep only applicable promotions and rank them by discount value.
   const promotion = promotions
     .filter((option) => option.value > 0)
     .sort((first, second) => second.value - first.value)[0];
@@ -43,6 +52,7 @@ export function calculateCartSummary(items: CartItem[]): CartSummary {
   };
 }
 
+// Round monetary values to two decimal places.
 function round(value: number): number {
   return Number(value.toFixed(2));
 }

@@ -19,6 +19,10 @@ export const defaultDatabase: MockDatabase = {
   orders: [],
 };
 
+/**
+ * Loads the persisted mock database from local storage or creates a fresh default one.
+ * @returns 
+ */
 export function readDatabase(): MockDatabase {
   const stored = localStorage.getItem(storageKey);
 
@@ -31,9 +35,20 @@ export function readDatabase(): MockDatabase {
   return JSON.parse(stored) as MockDatabase;
 }
 
+/**
+ * Saves the in-memory mock database back to local storage.
+ * @param database 
+ */
 export function writeDatabase(database: MockDatabase): void {
   localStorage.setItem(storageKey, JSON.stringify(database));
 }
+
+/**
+ * Retrieves the requested cart or falls back to the default cart.
+ * @param database 
+ * @param cartId 
+ * @returns 
+ */
 
 export function findCart(database: MockDatabase, cartId: string): MockCart {
   return database.carts.find((cart) => cart.id === cartId) ?? database.carts[0];

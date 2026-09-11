@@ -9,6 +9,11 @@ import { Order } from '../models';
 export class OrderService {
   private readonly http = inject(HttpClient);
   
+  /**
+   * Submit an order for the specified cart.
+   * @param cartId 
+   * @returns 
+   */
   placeOrder(cartId: string): Observable<Order> {
     return this.http.post<Order>(API_ENDPOINTS.orders, { cartId });
   }

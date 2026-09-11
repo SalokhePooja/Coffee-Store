@@ -6,6 +6,13 @@ import { MockDatabase, MockHandlerResult } from './mock-types';
 import { hasDuplicateName } from './mock-validation';
 import { writeDatabase } from './mock-storage';
 
+/**
+ * Handles the mock topping catalog endpoints for listing, creating, updating, and deleting toppings.
+ * @param request 
+ * @param url 
+ * @param database 
+ * @returns 
+ */
 export function handleToppingRequest(
   request: HttpRequest<unknown>,
   url: string,

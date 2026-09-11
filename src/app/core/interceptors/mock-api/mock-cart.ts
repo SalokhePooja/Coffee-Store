@@ -10,6 +10,7 @@ import {
   UpdateCartItemRequest,
 } from './mock-types';
 
+// Handles the mock cart API, including reads, item creation, adjustments, and removals.
 export function handleCartRequest(
   request: HttpRequest<unknown>,
   url: string,

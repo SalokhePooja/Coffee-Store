@@ -29,6 +29,7 @@ export class CartStore {
   private readonly api = inject(CartService);
   private readonly snackbar = inject(SnackbarService);
 
+  // Load the cart and publish its server-provided state.
   loadCart(): void {
     this.api.getCart().subscribe({
       next: (response: CartResponse) => this.applyCartResponse(response),
@@ -40,6 +41,11 @@ export class CartStore {
     });
   }
 
+  /**
+   * Add an item optimistically, then reconcile it with the server response.
+   * @param drink 
+   * @param toppings 
+   */
   addItem(drink: Drink, toppings: Topping[]): void {
     const optimisticItem: CartItem = {
       id: `optimistic-${Date.now()}`,
@@ -78,6 +84,11 @@ export class CartStore {
       });
   }
 
+/**
+ * Update an item's quantity optimistically and persist the change.
+ * @param itemId 
+ * @param quantity 
+ */
   updateQuantity(itemId: string, quantity: number): void {
     const nextItems = this.cartItemsState().map((item) =>
       item.id === itemId ? { ...item, quantity } : item,
@@ -98,6 +109,11 @@ export class CartStore {
     });
   }
 
+  
+  /**
+   * Remove an item optimistically and persist the removal.
+   * @param itemId 
+   */
   removeItem(itemId: string): void {
     const nextItems = this.cartItemsState().filter(
       (item) => item.id !== itemId,
@@ -118,11 +134,18 @@ export class CartStore {
     });
   }
 
+  /**
+   * Reset the cart contents and summary to their empty state.
+   */
   clear(): void {
     this.cartItemsState.set([]);
     this.cartSummaryState.set(emptySummary);
   }
 
+  /**
+   *  Apply cart items and summary returned by the server.
+   * @param response 
+   */
   private applyCartResponse(response: CartResponse): void {
     this.cartItemsState.set(response.items ?? []);
     this.cartSummaryState.set(

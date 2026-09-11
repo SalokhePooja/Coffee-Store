@@ -35,12 +35,17 @@ export class CartComponent {
     this.cartStore.removeItem(itemId);
   }
 
+  /**
+   * Places the order for the current cart and emits success or error events.
+   * If the order is successful, the cart is cleared.
+   * If the order fails, an error message is emitted.
+   */
   placeOrder(): void {
     this.orderService.placeOrder('cart-1').subscribe({
       next: (order) => {
         this.cartStore.clear();
         this.orderSuccess.emit(
-          `Your order has been placed successfully. Order: ${order.id}. Total: €${order.total.toFixed(2)}`,
+          `Your order has been placed successfully. Order Number: ${order.id}. Total: €${order.total.toFixed(2)}`,
         );
       },
       error: (requestError: { error?: { message?: string } }) => {

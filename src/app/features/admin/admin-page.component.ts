@@ -38,10 +38,16 @@ export class AdminPageComponent implements OnInit {
   private readonly toppingsApi = inject(ToppingService);
   private readonly snackbar = inject(SnackbarService);
 
+  /**
+   * Loads the initial drink and topping collections when the page is created.
+   */
   ngOnInit(): void {
     this.loadCollections();
   }
 
+  /**
+   * Fetches both catalog collections and updates the page state.
+   */
   loadCollections(): void {
     this.isLoading = true;
     forkJoin({
@@ -65,6 +71,10 @@ export class AdminPageComponent implements OnInit {
     });
   }
 
+  /**
+   * Creates or updates a drink after checking for duplicate names.
+   * @param value 
+   */
   saveDrink(value: CatalogFormValue): void {
     if (this.isDuplicate(this.drinks, value.name, value.id)) {
       this.snackbar.show('A drink with this name already exists.', 'error');
@@ -101,6 +111,10 @@ export class AdminPageComponent implements OnInit {
     });
   }
 
+  /**
+   * Creates or updates a topping after checking for duplicate names.
+   * @param value 
+   */
   saveTopping(value: CatalogFormValue): void {
     if (this.isDuplicate(this.toppings, value.name, value.id)) {
       this.snackbar.show('A topping with this name already exists.', 'error');
@@ -140,16 +154,28 @@ export class AdminPageComponent implements OnInit {
     });
   }
 
+  /**
+   * Starts editing the selected drink and notifies the user.
+   * @param drink 
+   */
   editDrink(drink: Drink): void {
     this.editingDrink = drink;
     this.snackbar.show(`Editing ${drink.name}`);
   }
 
+  /**
+   * Starts editing the selected topping and notifies the user.
+   * @param topping 
+   */
   editTopping(topping: Topping): void {
     this.editingTopping = topping;
     this.snackbar.show(`Editing ${topping.name}`);
   }
 
+  /**
+   * Deletes a drink and removes it from the displayed collection.
+   * @param id 
+   */
   deleteDrink(id: number): void {
     this.drinksApi.deleteDrink(id).subscribe({
       next: () => {
@@ -160,6 +186,10 @@ export class AdminPageComponent implements OnInit {
     });
   }
 
+  /**
+   * Deletes a topping and removes it from the displayed collection.
+   * @param id 
+   */
   deleteTopping(id: number): void {
     this.toppingsApi.deleteTopping(id).subscribe({
       next: () => {
@@ -170,11 +200,13 @@ export class AdminPageComponent implements OnInit {
     });
   }
 
+  // Cancels the active form edit for the requested catalog entity.
   cancel(entity: CatalogEntity): void {
     if (entity === 'drink') this.editingDrink = null;
     else this.editingTopping = null;
   }
 
+  // Checks whether another catalog item already uses the submitted name.
   private isDuplicate(
     items: (Drink | Topping)[],
     name: string,
@@ -185,12 +217,23 @@ export class AdminPageComponent implements OnInit {
     );
   }
 
+  /**
+   * Compares names case-insensitively after trimming whitespace.
+   * @param first 
+   * @param second 
+   * @returns 
+   */
   private hasSameName(first: string, second: string): boolean {
     return (
       first.trim().toLocaleLowerCase() === second.trim().toLocaleLowerCase()
     );
   }
 
+  /**
+   * Returns catalog items sorted alphabetically without mutating the input.
+   * @param items 
+   * @returns 
+   */
   private sortByName<T extends Drink | Topping>(items: T[]): T[] {
     return [...items].sort((first, second) =>
       first.name.localeCompare(second.name, undefined, { sensitivity: 'base' }),

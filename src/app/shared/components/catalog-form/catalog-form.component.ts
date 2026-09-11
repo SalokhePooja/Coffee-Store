@@ -52,6 +52,9 @@ export class CatalogFormComponent {
       : `Save ${this.entity} changes`;
   }
 
+  /**
+   * Submits the form data.
+   */
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -65,6 +68,9 @@ export class CatalogFormComponent {
     });
   }
 
+  /**
+   * Cancels the form and resets its state.
+   */
   cancel(): void {
     this.editingId = null;
     this.form.reset({ name: '', price: 0 });

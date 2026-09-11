@@ -9,6 +9,7 @@ import {
   MockHandlerResult,
 } from './mock-types';
 
+// Creates a mock order from the active cart when a valid order request is received.
 export function handleOrderRequest(
   request: HttpRequest<unknown>,
   url: string,

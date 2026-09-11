@@ -6,6 +6,7 @@ import { handleOrderRequest } from './mock-orders';
 import { handleToppingRequest } from './mock-toppings';
 import { readDatabase } from './mock-storage';
 
+// Routes each API request through the mock handlers and falls back to Angular when no mock matches.
 export const mockApiInterceptor: HttpInterceptorFn = (request, next) => {
   if (!request.url.startsWith('/api')) {
     return next(request);

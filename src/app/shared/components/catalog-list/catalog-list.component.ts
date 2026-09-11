@@ -25,14 +25,32 @@ export class CatalogListComponent {
   @Output() readonly editTopping = new EventEmitter<Topping>();
   @Output() readonly deleteTopping = new EventEmitter<number>();
 
+/**
+ *  Reports whether a topping is selected for the specified drink.
+ * @param drinkId 
+ * @param toppingId 
+ * @returns 
+ */
   isSelected(drinkId: number, toppingId: number): boolean {
     return (this.selectedToppings[drinkId] ?? []).includes(toppingId);
   }
 
+  /**
+   * Supplies a stable identity for each drink in the template loop.
+   * @param index 
+   * @param drink 
+   * @returns 
+   */
   trackDrinkId(index: number, drink: Drink): number {
     return drink.id;
   }
 
+  /**
+   * Supplies a stable identity for each topping in the template loop.
+   * @param index 
+   * @param topping 
+   * @returns 
+   */
   trackToppingId(index: number, topping: Topping): number {
     return topping.id;
   }
