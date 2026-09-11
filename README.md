@@ -165,6 +165,7 @@ Totals are rounded to two decimal places.
 ## Installation
 
 ```bash
+git clone https://github.com/SalokhePooja/Coffee-Store.git
 npm install
 ```
 
